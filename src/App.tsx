@@ -11,6 +11,8 @@ import Account from "./components/pages/Account";
 import { useSelector, useDispatch } from "react-redux";
 import Login from "./components/pages/Login/Login";
 import { isUserLoggedIn } from "./components/store/actions/actions";
+import SignUp from "./components/pages/SignUp/SignUp";
+import IndexPage from "./components/pages/IndexPage/IndexPage";
 const App = () => {
   const dispatch = useDispatch();
   const isAuthenticated: boolean = useSelector(
@@ -21,10 +23,12 @@ const App = () => {
   }, []);
   let routes = (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<IndexPage />} />
+      <Route path="/indexpage" element={<IndexPage />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/about" element={<About />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<SignUp />} />
     </Routes>
   );
   if (isAuthenticated) {

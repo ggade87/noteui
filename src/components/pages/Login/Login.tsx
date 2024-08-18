@@ -12,31 +12,44 @@ const Login = () => {
   const [error, setError] = useState("");
   const handleLogin = async () => {
     dispatch(authenticateUser(username, password));
+    navigate("/");
   };
 
   return (
     <div className="loginPage">
-      <h1>Login</h1>
+      <h2>Login</h2>
       <form onSubmit={() => handleLogin()}>
-        <label>
-          Username:
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Password:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </label>
-        <br />
-        <button type="submit">Login</button>
+        <table>
+          <tr>
+            <td>
+              <label>
+                Username:<br></br>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label>
+                Password:<br></br>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <button type="submit">Login</button>
+            </td>
+          </tr>
+        </table>
         {error && <p style={{ color: "red" }}>{error}</p>}
       </form>
     </div>

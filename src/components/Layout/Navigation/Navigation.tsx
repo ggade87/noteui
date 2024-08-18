@@ -3,14 +3,17 @@ import "./Navigation.css";
 import { useSelector, useDispatch } from "react-redux";
 import Login from "../../pages/Login/Login";
 import { logout } from "../../store/actions/actions";
+import { useNavigate } from "react-router-dom";
 const Navigation = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const isAuthenticated: boolean = useSelector(
     (state: any) => state.home.isAuthenticated
   );
   const handleLogout = () => {
     localStorage.removeItem("token");
     dispatch(logout());
+    navigate("/indexpage");
   };
   return (
     <>
@@ -19,7 +22,7 @@ const Navigation = () => {
           <nav>
             <ul className="navMenu">
               <li>
-                <Link to="/">Home</Link>
+                <Link to="/indexpage">Home</Link>
               </li>
 
               <li>
@@ -29,7 +32,10 @@ const Navigation = () => {
                 <Link to="/about">about</Link>
               </li>
               <li>
-                <button onClick={() => handleLogout()}>Sign up</button>
+                <Link to="/signup">Sign up</Link>
+              </li>
+              <li>
+                <Link to="/login">Login</Link>
               </li>
             </ul>
           </nav>

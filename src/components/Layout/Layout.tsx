@@ -15,24 +15,19 @@ const Layout = (props: LayoutProps) => {
         <Navigation />
       </div>
       {props.isAuthenticated ? (
-        <>
-          <div className="row">
-            <div className="column">
-              <MainMenu></MainMenu>
-            </div>
+        <div className="row">
+          <div className="column">
+            <MainMenu></MainMenu>
           </div>
-          <div className="row">
-            <div className="column">
-              <main>{props.children}</main>
-            </div>
-          </div>
-        </>
-      ) : (
-        <div className="LoginDiv">
-          <Login />
         </div>
+      ) : (
+        <></>
       )}
-
+      <div className="row">
+        <div className="column">
+          <main>{props.children}</main>
+        </div>
+      </div>
       <div className="footer">
         <h2>Footer</h2>
       </div>
