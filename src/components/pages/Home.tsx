@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-
+import { useNavigate } from "react-router-dom";
+import "./Home.css";
 const Home = () => {
   const dispatch = useDispatch();
   const pages = useSelector((state: any) => state.pages);
@@ -10,9 +11,10 @@ const Home = () => {
   };
 
   return (
-    <div>
+    <div className="home">
       <h1>Welcome to Home!</h1>
-      <button onClick={handleToggle}>Toggle Home</button>
+      <input type="text"></input>
+      <button onClick={handleToggle}>Search</button>
     </div>
   );
 };
