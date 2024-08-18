@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import "./content-details.css";
 import { useParams } from "react-router-dom";
-import { getContent } from "../../store/actions/home";
+import { getContent } from "../../store/actions/actions";
 import { IContent } from "../../BAL/Type";
 interface Props {
   subMenuId: string | undefined;

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import "./MainMenu.css";
-import { IMainMenu } from "../BAL/Type";
+import { IMainMenu } from "../../BAL/Type";
 const MainMenu = () => {
   //const dispatch = useDispatch();
   const mainMenu = useSelector((state: any) => state.home.mainMenu);

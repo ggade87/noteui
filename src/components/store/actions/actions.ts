@@ -39,21 +39,28 @@ export const checkAuthTimeout = (expirationTime: number) => {
     logout();
   }, expirationTime * 1000);
 };
-export const IsUserLoggedIn = () => {
+
+export const authenticateUser = (username: string, password: string) => {
+  let token = "SetTokenString";
+  let userId = "1234";
+  const expirationDate = new Date(new Date().getTime() + 3600 * 1000);
+  localStorage.setItem("token", token);
+  localStorage.setItem("expirationDate", "" + expirationDate);
+  localStorage.setItem("userId", userId);
+  return {
+    type: actionTypes.AUTH_SUCCESS,
+    token: token,
+    userId: userId,
+    isAuthenticated: true,
+  };
+};
+
+export const isUserLoggedIn = () => {
   const token = localStorage.getItem("token");
-  if (!token) {
-    logout();
-  } else {
-    let dtStr: string | null = localStorage.getItem("expirationDate");
-    let expirationDate: Date = new Date(dtStr as string);
-    if (expirationDate <= new Date()) {
-      logout();
-    } else {
-      const userId = localStorage.getItem("userId");
-      authSuccess(token, userId as string);
-      checkAuthTimeout(
-        (expirationDate.getTime() - new Date().getTime()) / 1000
-      );
-    }
-  }
+  return {
+    type: actionTypes.AUTH_SUCCESS,
+    token: token,
+    userId: localStorage.getItem("userId"),
+    isAuthenticated: token != null ? true : false,
+  };
 };

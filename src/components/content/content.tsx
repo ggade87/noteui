@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import "./content.css";
 import ContentDetails from "./content-details/content-details";
-import { getSubMenu } from "../store/actions/home";
+import { getSubMenu } from "../store/actions/actions";
 import Home from "../pages/Home";
 import { ISubMenu } from "../BAL/Type";
 const Content = () => {

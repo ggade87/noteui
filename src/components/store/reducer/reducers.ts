@@ -3,6 +3,7 @@ import { updateObject } from "../utility";
 const initialState = {
   token: null,
   userId: null,
+  isAuthenticated: false,
   mainMenu: [
     { _id: "63c6a2866756e2296815939d", userId: "1", name: "Menu1" },
     { _id: "63c6a2866756e22968159392", userId: "2", name: "Menu2" },
@@ -76,7 +77,19 @@ const GetContent = (state: any, action: any) => {
 };
 
 const authLogout = (state: any, action: any) => {
-  return updateObject(state, { token: null, userId: null });
+  return updateObject(state, {
+    token: null,
+    userId: null,
+    isAuthenticated: false,
+  });
+};
+const authSuccess = (state: any, action: any) => {
+  debugger;
+  return updateObject(state, {
+    token: action.token,
+    userId: action.userId,
+    isAuthenticated: action.isAuthenticated,
+  });
 };
 const reducer = (state = initialState, action: any) => {
   switch (action.type) {
@@ -86,6 +99,8 @@ const reducer = (state = initialState, action: any) => {
       return GetContent(state, action);
     case actionTypes.AUTH_LOGOUT:
       return authLogout(state, action);
+    case actionTypes.AUTH_SUCCESS:
+      return authSuccess(state, action);
     default:
       return state;
   }

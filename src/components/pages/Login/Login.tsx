@@ -1,34 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
-import "./Home.css";
+import { authenticateUser } from "../../store/actions/actions";
+import "./Login.css";
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const handleLogin = async () => {
-    // event.preventDefault();
-    if (!username || !password) {
-      setError("Please fill in both fields");
-      return;
-    }
-    localStorage.setItem("token", "myTonen");
-    navigate("/home");
-    // const response = await fetch("/api/login", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({ username, password }),
-    // });
-    // const data = await response.json();
-    // if (data.token) {
-    //   setToken(data.token);
-    // }
+    dispatch(authenticateUser(username, password));
   };
 
   return (
-    <div>
+    <div className="loginPage">
       <h1>Login</h1>
       <form onSubmit={() => handleLogin()}>
         <label>
