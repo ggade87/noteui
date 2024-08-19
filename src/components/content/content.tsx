@@ -23,17 +23,22 @@ const Content = () => {
   };
   return (
     <div>
-      <h1>Content{id}</h1>
       <div className="row">
         <div className="column1">
-          <h2>Column Content 11</h2>
           <div className="vertical-menu">
+            <table>
+              <tr>
+                <input type="text"></input>
+                <button>Add</button>
+              </tr>
+            </table>
             <ul>
               {filteredSubMenu &&
                 filteredSubMenu.map((data: ISubMenu, index: number) => {
                   return (
                     <li key={index}>
                       <button
+                        style={{ width: "150px" }}
                         className="nav-link active"
                         onClick={() => setSubMenuId(data._id)}
                       >
@@ -46,7 +51,6 @@ const Content = () => {
           </div>
         </div>
         <div className="column2">
-          <h2>Column Content 22</h2>
           <ContentDetails subMenuId={subMenuId} />
         </div>
       </div>

@@ -1,9 +1,9 @@
 import { Outlet, Link } from "react-router-dom";
 import "./Navigation.css";
 import { useSelector, useDispatch } from "react-redux";
-import Login from "../../pages/Login/Login";
 import { logout } from "../../store/actions/actions";
 import { useNavigate } from "react-router-dom";
+import * as Constant from "../../BAL/Constants";
 const Navigation = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -13,7 +13,9 @@ const Navigation = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     dispatch(logout());
+    debugger;
     navigate("/indexpage");
+    navigate(0);
   };
   return (
     <>
@@ -22,20 +24,19 @@ const Navigation = () => {
           <nav>
             <ul className="navMenu">
               <li>
-                <Link to="/indexpage">Home</Link>
-              </li>
-
-              <li>
-                <Link to="/contact">contact</Link>
+                <Link to="/indexpage">{Constant.NAVIGATION_MENU.Home}</Link>
               </li>
               <li>
-                <Link to="/about">about</Link>
+                <Link to="/contact">{Constant.NAVIGATION_MENU.Contact}</Link>
               </li>
               <li>
-                <Link to="/signup">Sign up</Link>
+                <Link to="/about">{Constant.NAVIGATION_MENU.AboutUs}</Link>
               </li>
               <li>
-                <Link to="/login">Login</Link>
+                <Link to="/signup">{Constant.NAVIGATION_MENU.SignUp}</Link>
+              </li>
+              <li>
+                <Link to="/login">{Constant.NAVIGATION_MENU.Login}</Link>
               </li>
             </ul>
           </nav>
@@ -43,20 +44,21 @@ const Navigation = () => {
           <nav>
             <ul className="navMenu">
               <li>
-                <Link to="/">Home</Link>
-              </li>
-
-              <li>
-                <Link to="/contact">contact</Link>
+                <Link to="/">{Constant.NAVIGATION_MENU.Home}</Link>
               </li>
               <li>
-                <Link to="/about">about</Link>
+                <Link to="/contact">{Constant.NAVIGATION_MENU.Contact}</Link>
               </li>
               <li>
-                <Link to="/account">My Account</Link>
+                <Link to="/about">{Constant.NAVIGATION_MENU.AboutUs}</Link>
               </li>
               <li>
-                <button onClick={handleLogout}>Logout</button>
+                <Link to="/account">{Constant.NAVIGATION_MENU.MyAccount}</Link>
+              </li>
+              <li>
+                <Link to="#" onClick={handleLogout}>
+                  {Constant.NAVIGATION_MENU.Logout}
+                </Link>
               </li>
             </ul>
           </nav>

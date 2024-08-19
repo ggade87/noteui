@@ -7,12 +7,13 @@ import About from "./components/pages/About";
 import { ErrorBoundary } from "./components/hoc/ErrorBoundary";
 import Layout from "./components/Layout/Layout";
 import Content from "./components/content/content";
-import Account from "./components/pages/Account";
 import { useSelector, useDispatch } from "react-redux";
 import Login from "./components/pages/Login/Login";
 import { isUserLoggedIn } from "./components/store/actions/actions";
 import SignUp from "./components/pages/SignUp/SignUp";
 import IndexPage from "./components/pages/IndexPage/IndexPage";
+import Account from "./components/pages/Account/Account";
+import Public from "./components/pages/Public/Public";
 const App = () => {
   const dispatch = useDispatch();
   const isAuthenticated: boolean = useSelector(
@@ -29,6 +30,7 @@ const App = () => {
       <Route path="/about" element={<About />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
+      <Route path="/public/:id" element={<Public />} />
     </Routes>
   );
   if (isAuthenticated) {
@@ -39,6 +41,7 @@ const App = () => {
         <Route path="/about" element={<About />} />
         <Route path="/account" element={<Account />} />
         <Route path="/content/:id" element={<Content />} />
+        <Route path="/public/:id" element={<Public />} />
       </Routes>
     );
   }
