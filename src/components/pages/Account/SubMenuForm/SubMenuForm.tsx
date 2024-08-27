@@ -1,16 +1,46 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import "./SubMenuForm.css";
+import { ToastContainer, toast } from "react-toastify";
+import {
+  getMainMenu,
+  getSubMenu,
+  deleteSubMenu,
+  createSubMainMenu,
+  updateSubMainMenu,
+} from "../../../store/actions/actions";
+import { IMainMenu, ISubMenu, NewSubMainMenuRequest } from "../../../BAL/Type";
+import { RootState } from "../../../store/store";
+import { IsValid } from "../../../BAL/CommonFunction";
 const SubMenuForm = () => {
-  const mainMenu = useSelector((state: any) => state.home.mainMenu);
-  const sunMenu = useSelector((state: any) => state.home.sunMenu);
+  const _mainMenu: IMainMenu[] = useSelector(
+    (state: RootState) => state.home.mainMenu
+  );
+  const sunMenu: ISubMenu[] = useSelector(
+    (state: RootState) => state.home.sunMenu
+  );
+  const [selectMenuId, setSelectMenuId] = useState("");
+  const filteredSubMenu: ISubMenu[] = useSelector(
+    (state: any) => state.home.filteredSubMenu
+  );
   const [selectValue, setSelectValue] = useState("");
   const [tempId, setTempId] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState("");
+  const [newSubMenu, setNewSubMenu] = useState("");
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const accountID = localStorage.getItem("accountId");
+    dispatch(getMainMenu(accountID));
+    if (!IsValid(selectMenuId)) {
+      dispatch(getSubMenu(""));
+    }
+  }, []);
   const handleChange = (e: any) => {
-    setSelectValue(e.target.value);
-    //this.props.onSubMenuLoad(e.target.value);
+    setSelectMenuId(e.target.value);
+    if (IsValid(e.target.value)) {
+      dispatch(getSubMenu(e.target.value));
+    }
   };
   const handleEdit = (id: string, name: string) => {
     setTempId(id);
@@ -25,30 +55,65 @@ const SubMenuForm = () => {
     setName("");
   };
 
-  const handleSave = (id: string) => {
-    // this.props.onMainMenuUpdate(this.state.name, id);
-    setTempId("");
-    setName("");
-  };
-  const handleSubMenuSave = (id: string) => {
-    //this.props.onSubMenuUpdate(this.state.name, id);
-    setSelectValue(name);
-    //this.props.onSubMenuLoad(this.state.name);
-    setTempId("");
-    setName("");
+  const handleSubMenuSave = (id: string, userId: string) => {
+    if (IsValid(name) && IsValid(id) && IsValid(selectMenuId)) {
+      const updateRequest: NewSubMainMenuRequest = {
+        _id: id,
+        mid: selectMenuId,
+        name: name,
+      };
+      dispatch(updateSubMainMenu(updateRequest));
+      toast.success("Menu updated.", { draggable: true });
+      setTempId("");
+    }
   };
 
   const handleSubMenuDelete = (id: string, name: string) => {
     //Delete main menu - Delete Content -> Delete Sub Menues -> Delete Main Menu.
     if (window.confirm("Are you sure to delete this record?")) {
-      console.log("Code for Delete" + id + name);
+      if (IsValid(id)) {
+        dispatch(deleteSubMenu(id));
+        toast.success("Menu Deleted.", { draggable: true });
+      }
       //this.props.onSubMenuDelete(name, id);
+    }
+  };
+  const handleAddNewSubManu = () => {
+    if (IsValid(newSubMenu)) {
+      const newSubMenuRequest: NewSubMainMenuRequest = {
+        _id: "",
+        mid: selectMenuId,
+        name: newSubMenu,
+      };
+      dispatch(createSubMainMenu(newSubMenuRequest));
+      if (IsValid(newSubMenu)) {
+        toast.success("Menu saved.", { draggable: true });
+        setNewSubMenu("");
+        if (IsValid(selectMenuId)) {
+          dispatch(getSubMenu(selectMenuId));
+        }
+      }
     }
   };
 
   return (
     <div>
       <h1>SubMenuForm</h1>
+      <ToastContainer></ToastContainer>
+      <table>
+        <tr>
+          <td>
+            <input
+              type="text"
+              value={newSubMenu}
+              onChange={(event) => setNewSubMenu(event.target.value)}
+            />
+          </td>
+          <td>
+            <button onClick={handleAddNewSubManu}>Add</button>
+          </td>
+        </tr>
+      </table>
       <table>
         <thead>
           <tr>
@@ -56,14 +121,14 @@ const SubMenuForm = () => {
               <select
                 name="cars"
                 id="cars"
-                value={selectValue}
+                value={selectMenuId}
                 onChange={(e) => handleChange(e)}
                 className="custom-select"
                 style={{ width: "200px" }}
               >
                 <option value="">--Select Menu--</option>
-                {mainMenu && mainMenu.length > 0
-                  ? mainMenu.map((data: any, index: number) => {
+                {_mainMenu
+                  ? _mainMenu.map((data: IMainMenu, index: number) => {
                       return (
                         <option key={data._id} value={data._id}>
                           {data.name}
@@ -80,7 +145,8 @@ const SubMenuForm = () => {
           <tbody>
             {error
               ? error
-              : sunMenu.map((item: any) => {
+              : filteredSubMenu &&
+                filteredSubMenu.map((item: any) => {
                   return (
                     <tr>
                       <td>
@@ -106,7 +172,11 @@ const SubMenuForm = () => {
                       <td>
                         {tempId === item._id ? (
                           <div>
-                            <button onClick={() => handleSubMenuSave(item._id)}>
+                            <button
+                              onClick={() =>
+                                handleSubMenuSave(item._id, item.name)
+                              }
+                            >
                               Save
                             </button>
                             / <button onClick={handleCancel}>Cancel</button>

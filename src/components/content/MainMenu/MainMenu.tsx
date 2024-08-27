@@ -1,12 +1,18 @@
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import "./MainMenu.css";
 import { IMainMenu } from "../../BAL/Type";
+import { getMainMenu } from "../../store/actions/actions";
 const MainMenu = () => {
-  //const dispatch = useDispatch();
-  const mainMenu = useSelector((state: any) => state.home.mainMenu);
-  useEffect(() => {}, [mainMenu]);
+  const dispatch = useDispatch();
+  const accountId: string | null = localStorage.getItem("accountId");
+  const mainMenu: IMainMenu[] = useSelector(
+    (state: any) => state.home.mainMenu
+  );
+  useEffect(() => {
+    dispatch(getMainMenu(accountId));
+  }, [accountId]);
   return (
     <div>
       <header>

@@ -1,16 +1,40 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { IMainMenu } from "../../../BAL/Type";
+import {
+  IMainMenu,
+  NewMainMenuRequest,
+  MainMenuUpdateRequest,
+} from "../../../BAL/Type";
 import "./MainMenuForm.css";
+import {
+  createMainMenu,
+  deleteMainMenu,
+  updateMainMenu,
+} from "../../../store/actions/actions";
+import { IsValid } from "../../../BAL/CommonFunction";
+import { RootState } from "../../../store/store";
+import { ToastContainer, toast } from "react-toastify";
 const MainMenuForm = () => {
+  const accountId: string | null = localStorage.getItem("accountId");
+
+  const dispatch = useDispatch();
   const mainMenu = useSelector((state: any) => state.home.mainMenu);
   const [selectValue, setSelectValue] = useState("");
+  const [newMenu, setNewMenu] = useState("");
   const [tempId, setTempId] = useState("");
   const [name, setName] = useState("");
-  useEffect(() => {}, [mainMenu]);
+  const isSuccess: boolean = useSelector(
+    (state: RootState) => state.home.isSuccess
+  );
+  const error: string = useSelector((state: RootState) => state.home.error);
+
+  useEffect(() => {
+    if (IsValid(error)) {
+      toast.error(error, { draggable: true });
+    }
+  }, [newMenu]);
   const handleSubMenuDelete = (id: string, name: string) => {
-    //Delete main menu - Delete Content -> Delete Sub Menues -> Delete Main Menu.
     if (window.confirm("Are you sure to delete this record?")) {
       console.log("Code for Delete" + id + name);
       //this.props.onSubMenuDelete(name,id);
@@ -20,12 +44,17 @@ const MainMenuForm = () => {
     setTempId("");
     setName("");
   };
-  const handleSubMenuSave = (id: string) => {
-    // this.props.onSubMenuUpdate(this.state.name,id);
-    // this.setState({selectValue:this.state.name});
-    // this.props.onSubMenuLoad(this.state.name);
-    setTempId("");
-    setName("");
+  const handleSubMenuSave = (id: string, userId: string) => {
+    if (IsValid(name) && IsValid(id)) {
+      const updateRequest: MainMenuUpdateRequest = {
+        _id: id,
+        userId: userId,
+        name: name,
+      };
+      dispatch(updateMainMenu(updateRequest));
+      toast.success("Menu updated.", { draggable: true });
+      setTempId("");
+    }
   };
   const handleInput = (event: Event) => {
     setName("");
@@ -35,9 +64,49 @@ const MainMenuForm = () => {
     setTempId(id);
     setName(name);
   };
+
+  const handleAddNewManu = () => {
+    if (mainMenu.length === 6) {
+      toast.warning("Can not add more then 6 mamnu", { draggable: true });
+    } else {
+      if (IsValid(newMenu)) {
+        const newMenuRequest: NewMainMenuRequest = {
+          userId: accountId,
+          name: newMenu,
+        };
+        dispatch(createMainMenu(newMenuRequest));
+        if (IsValid(newMenu)) {
+          toast.success("Menu saved.", { draggable: true });
+          setNewMenu("");
+        }
+      }
+    }
+  };
+  const handleDelete = (id: string) => {
+    dispatch(deleteMainMenu(id));
+    if (IsValid(id)) {
+      toast.success("Menu Deleted.", { draggable: true });
+    }
+  };
+
   return (
     <div className="MainMenuDiv">
       <h1>MainMenuForm</h1>
+      <ToastContainer></ToastContainer>
+      <table>
+        <tr>
+          <td>
+            <input
+              type="text"
+              value={newMenu}
+              onChange={(event) => setNewMenu(event.target.value)}
+            />
+          </td>
+          <td>
+            <button onClick={handleAddNewManu}>Add</button>
+          </td>
+        </tr>
+      </table>
       <nav>
         <ul>
           {mainMenu &&
@@ -52,7 +121,7 @@ const MainMenuForm = () => {
                             name={data._id}
                             type="text"
                             value={name}
-                            onChange={(event) => handleInput}
+                            onChange={(event) => setName(event.target.value)}
                           ></input>
                         ) : (
                           data.name
@@ -61,7 +130,11 @@ const MainMenuForm = () => {
                       <td>
                         {tempId === data._id ? (
                           <div>
-                            <button onClick={() => handleSubMenuSave(data._id)}>
+                            <button
+                              onClick={() =>
+                                handleSubMenuSave(data._id, data.userId)
+                              }
+                            >
                               Save
                             </button>{" "}
                             / <button onClick={handleCancel}>Cancel</button>
@@ -78,7 +151,9 @@ const MainMenuForm = () => {
                             >
                               Edit
                             </button>
-                            <button>Delete</button>
+                            <button onClick={() => handleDelete(data._id)}>
+                              Delete
+                            </button>
                           </div>
                         )}
                       </td>

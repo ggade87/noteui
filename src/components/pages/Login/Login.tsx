@@ -1,23 +1,35 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { authenticateUser } from "../../store/actions/actions";
 import "./Login.css";
+import { ILoginRequest } from "../../BAL/Type";
+import { loginUser } from "../../store/actions/actions";
+import { IsValid } from "../../BAL/CommonFunction";
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const error: string = useSelector((state: any) => state.home.error);
+  const isAuthenticated: boolean = useSelector(
+    (state: any) => state.home.isAuthenticated
+  );
   const handleLogin = async () => {
-    dispatch(authenticateUser(username, password));
-    navigate("/");
+    const loginRequest: ILoginRequest = {
+      username: username,
+      password: password,
+    };
+    dispatch(loginUser(loginRequest));
   };
-
+  useEffect(() => {
+    if (!IsValid(error) && isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated, error]);
   return (
     <div className="loginPage">
       <h2>Login</h2>
+      {!isAuthenticated ? "" : "Invalid loginss"}
       <form onSubmit={() => handleLogin()}>
         <table>
           <tr>

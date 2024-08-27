@@ -9,7 +9,7 @@ import Layout from "./components/Layout/Layout";
 import Content from "./components/content/content";
 import { useSelector, useDispatch } from "react-redux";
 import Login from "./components/pages/Login/Login";
-import { isUserLoggedIn } from "./components/store/actions/actions";
+import { isUserLoggedIn } from "./components/store/reducer/notereducers";
 import SignUp from "./components/pages/SignUp/SignUp";
 import IndexPage from "./components/pages/IndexPage/IndexPage";
 import Account from "./components/pages/Account/Account";
@@ -20,7 +20,7 @@ const App = () => {
     (state: any) => state.home.isAuthenticated
   );
   useEffect(() => {
-    dispatch(isUserLoggedIn());
+    dispatch(isUserLoggedIn(""));
   }, []);
   let routes = (
     <Routes>

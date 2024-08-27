@@ -6,7 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
-import store from "./components/store/store";
+import { store } from "./components/store/store";
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );

@@ -1,7 +1,7 @@
 import { Outlet, Link } from "react-router-dom";
 import "./Navigation.css";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../../store/actions/actions";
+import { logout } from "../../store/reducer/notereducers";
 import { useNavigate } from "react-router-dom";
 import * as Constant from "../../BAL/Constants";
 const Navigation = () => {
@@ -12,8 +12,10 @@ const Navigation = () => {
   );
   const handleLogout = () => {
     localStorage.removeItem("token");
-    dispatch(logout());
-    debugger;
+    localStorage.removeItem("Email");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("accountId");
+    dispatch(logout(""));
     navigate("/indexpage");
     navigate(0);
   };

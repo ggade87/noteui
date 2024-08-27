@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 const About = () => {
   const dispatch = useDispatch();
-  const pages = useSelector((state: any) => state.pages);
+  const pages = useSelector((state: any) => state.home.pages);
 
   const handleToggle = () => {
     dispatch({ type: "TOGGLE_PAGE", payload: "about" });
